@@ -47,41 +47,49 @@ public class Pizza {
     }
 
     void validateSlices() {
-        boolean[][] testPizza = new boolean[R][C];
+        for (Slice slice : sliceList) {
+            if(!validateSlice(slice)) {
+                throw new IllegalStateException(slice + " not validated!");
+            }
+        }
+    }
+
+    boolean validateSlice(Slice slice) {
+        boolean tomato = false;
+        boolean mushroom = false;
+
+        for (int c = slice.c1; c <= slice.c2; c++) {
+            for (int r = slice.r1; r <= slice.r2; r++) {
+                if (pizza[r][c] == TOMAT) tomato = true;
+                if (pizza[r][c] == MUSHROOM) mushroom = true;
+            }
+        }
+
+        // Tomato and mushroom validator!
+        if (!tomato || !mushroom) {
+            return false;
+        }
+
+        // H slice validator!
+        if (slice.getSize() > H) {
+            return false;
+        }
+
+        return true;
+    }
+
+    void validatePizza() {
+        boolean[][] validationPizza = new boolean[R][C];
 
         for (Slice slice :
                 sliceList) {
-            if (slice.c1 > slice.c2) {
-                slice.swapC();
-            }
-            if (slice.r1 > slice.r2) {
-                slice.swapR();
-            }
-
-            boolean tomato = false;
-            boolean mushroom = false;
-
             for (int c = slice.c1; c <= slice.c2; c++) {
                 for (int r = slice.r1; r <= slice.r2; r++) {
-                    // Pizza at most one slice validator!
-                    if (testPizza[r][c]) {
-                        throw new IllegalStateException("Pizza [" + r + "," + c + "] is triggered twice!");
+                    if(validationPizza[r][c]) {
+                        throw new IllegalStateException("Pizza is triggered twice in ["+r+", "+c+"] with "+slice);
                     }
-                    testPizza[r][c] = true;
-                    if (pizza[r][c] == TOMAT) tomato = true;
-                    if (pizza[r][c] == MUSHROOM) mushroom = true;
+                    validationPizza[r][c] = true;
                 }
-            }
-
-            // Tomato and mushroom validator!
-            if (!tomato || !mushroom) {
-                throw new IllegalStateException("There are not at least one tomato and one mushroom in " + slice);
-            }
-
-            // H slice validator!
-            int size = (1 + (slice.c2 - slice.c1)) * (1 + (slice.r2 - slice.r1));
-            if (size > H) {
-                throw new IllegalStateException(slice + " is bigger than H!");
             }
         }
     }
@@ -118,7 +126,7 @@ public class Pizza {
 
 
     public List<Slice> cut(Slice slice, boolean horizontal) {
-        if (slice.getSize() < H && slice.validate()) {
+        if (this.validateSlice(slice)) {
             List<Slice> sliceList = new ArrayList<>();
             sliceList.add(slice);
             return sliceList;

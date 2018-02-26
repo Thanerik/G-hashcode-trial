@@ -55,27 +55,23 @@ public class Pizza {
     }
 
     boolean validateSlice(Slice slice) {
-        boolean tomato = false;
-        boolean mushroom = false;
-
-        for (int c = slice.c1; c <= slice.c2; c++) {
-            for (int r = slice.r1; r <= slice.r2; r++) {
-                if (pizza[r][c] == TOMAT) tomato = true;
-                if (pizza[r][c] == MUSHROOM) mushroom = true;
-            }
-        }
-
-        // Tomato and mushroom validator!
-        if (!tomato || !mushroom) {
-            return false;
-        }
+        int tomato = 0;
+        int mushroom = 0;
 
         // H slice validator!
         if (slice.getSize() > H) {
             return false;
         }
 
-        return true;
+        for (int c = slice.c1; c <= slice.c2; c++) {
+            for (int r = slice.r1; r <= slice.r2; r++) {
+                if (pizza[r][c] == TOMAT) tomato++;
+                if (pizza[r][c] == MUSHROOM) mushroom++;
+            }
+            if(tomato >= L && mushroom >= L) return true;
+        }
+
+        return false;
     }
 
     void validatePizza() {
@@ -137,13 +133,13 @@ public class Pizza {
         }
         if (slice.getSize() < H) return new ArrayList<>();
 
-        int lines;
-        if (horizontal) lines = slice.getNumberOfRows();
-        else lines = slice.getNumberOfColumns();
+        int cuts;
+        if (horizontal) cuts = slice.getNumberOfRows()-1;
+        else cuts = slice.getNumberOfColumns()-1;
 
         int max = 0;
         List<Slice> best = new ArrayList<>();
-        for (int i = 1; i < lines-1; i++) {
+        for (int i = 0; i < cuts; i++) {
             List<Slice> slices = slice.slice(i, horizontal);
             for (Slice smallSlice : slices) {
                 List<Slice> recursiveResult = cut(smallSlice, !horizontal);

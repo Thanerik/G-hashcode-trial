@@ -47,15 +47,16 @@ public class Slice {
         return sb.toString();
     }
 
+
     List<Slice> slice(int where, boolean horizontal) {
         ArrayList<Slice> slicelist = new ArrayList<>();
         if(horizontal) {
-            slicelist.add(new Slice(r1, c1, where-1, c2));
-            slicelist.add(new Slice(where, c1, r2, c2));
+            slicelist.add(new Slice(r1, c1, where + r1, c2));
+            slicelist.add(new Slice(where+r1+1, c1, r2, c2));
         }
         else {
-            slicelist.add(new Slice(r1, c1, r2, where-1));
-            slicelist.add(new Slice(r1, where, r2, c2));
+            slicelist.add(new Slice(r1, c1, r2, where+c1));
+            slicelist.add(new Slice(r1, where+c1+1, r2, c2));
         }
 
         return slicelist;

@@ -8,7 +8,7 @@ public class Pizza {
     private static final int TOMAT = 1;
     private static final int MUSHROOM = 0;
 
-    ArrayList<Slice> sliceList = new ArrayList<>();
+    List<Slice> sliceList = new ArrayList<>();
     static int[][] pizza;
     int R;
     int C;
@@ -114,9 +114,12 @@ public class Pizza {
         }
     }
 
-    List<Slice> makeSlices() {
+    void makeSlices() {
         Slice slice = new Slice(0,0,R-1,C-1);
-        return cut(slice, true);
+        List<Slice> sliceList1 = cut(slice, true);
+        List<Slice> sliceList2 = cut(slice, false);
+        if(calcValue(sliceList1) > calcValue(sliceList2)) sliceList = sliceList1;
+        else sliceList = sliceList2;
     }
 
     void printPizza() {
@@ -132,13 +135,14 @@ public class Pizza {
             sliceList.add(slice);
             return sliceList;
         }
+        if (slice.getSize() < H) return new ArrayList<>();
 
         int lines;
         if (horizontal) lines = slice.getNumberOfRows();
         else lines = slice.getNumberOfColumns();
 
         int max = 0;
-        List<Slice> best = null;
+        List<Slice> best = new ArrayList<>();
         for (int i = 1; i < lines-1; i++) {
             List<Slice> slices = slice.slice(i, horizontal);
             for (Slice smallSlice : slices) {
@@ -156,6 +160,7 @@ public class Pizza {
     }
 
     int calcValue(List<Slice> slices) {
+        if (slices.size() == 0) return 0;
         int value = 0;
         for (Slice slice : slices) value += slice.getSize();
         return value;

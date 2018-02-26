@@ -3,7 +3,7 @@ public class pizzaSlice {
     private static final boolean DEBUG = true;
 
     public static void main(String[] args) {
-        String file = "small";
+        String file = "example";
 
         Pizza pizza = new Pizza();
         pizza.parsePizza("data/" + file + ".in");
@@ -16,6 +16,7 @@ public class pizzaSlice {
         }
 
         pizza.validateSlices();
+        pizza.validatePizza();
         //pizza.outputPizza("output/" + file + ".out");
     }
 

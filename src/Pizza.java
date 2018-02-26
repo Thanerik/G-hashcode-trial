@@ -115,7 +115,8 @@ public class Pizza {
     }
 
     List<Slice> makeSlices() {
-        return new ArrayList<>();
+        Slice slice = new Slice(0,0,R-1,C-1);
+        return cut(slice, true);
     }
 
     void printPizza() {
@@ -138,7 +139,7 @@ public class Pizza {
 
         int max = 0;
         List<Slice> best = null;
-        for (int i = 0; i < lines-1; i++) {
+        for (int i = 1; i < lines-1; i++) {
             List<Slice> slices = slice.slice(i, horizontal);
             for (Slice smallSlice : slices) {
                 List<Slice> recursiveResult = cut(smallSlice, !horizontal);
@@ -159,4 +160,5 @@ public class Pizza {
         for (Slice slice : slices) value += slice.getSize();
         return value;
     }
+
 }

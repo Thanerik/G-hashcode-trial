@@ -79,9 +79,9 @@ public class Pizza {
             }
 
             // H slice validator!
-            int size = (1+(slice.c2-slice.c1)) * (1+(slice.r2-slice.r1));
-            if(size > H) {
-                throw new IllegalStateException(slice+" is bigger than H!");
+            int size = (1 + (slice.c2 - slice.c1)) * (1 + (slice.r2 - slice.r1));
+            if (size > H) {
+                throw new IllegalStateException(slice + " is bigger than H!");
             }
         }
     }
@@ -114,5 +114,41 @@ public class Pizza {
         for (int i = 0; i < R; i++) {
             System.out.println(Arrays.toString(pizza[i]));
         }
+    }
+
+
+    public List<Slice> cut(Slice slice, boolean horizontal) {
+        if (slice.getSize() < H && slice.validate()) {
+            List<Slice> sliceList = new ArrayList<>();
+            sliceList.add(slice);
+            return sliceList;
+        }
+
+        int lines;
+        if (horizontal) lines = slice.getNumberOfRows();
+        else lines = slice.getNumberOfColumns();
+
+        int max = 0;
+        List<Slice> best = null;
+        for (int i = 0; i < lines-1; i++) {
+            List<Slice> slices = slice.slice(i, horizontal);
+            for (Slice smallSlice : slices) {
+                List<Slice> recursiveResult = cut(smallSlice, !horizontal);
+                int recursiveValue = calcValue(recursiveResult);
+                if (recursiveValue > max) {
+                    max = recursiveValue;
+                    best = recursiveResult;
+                }
+            }
+
+
+        }
+        return best;
+    }
+
+    int calcValue(List<Slice> slices) {
+        int value = 0;
+        for (Slice slice : slices) value += slice.getSize();
+        return value;
     }
 }

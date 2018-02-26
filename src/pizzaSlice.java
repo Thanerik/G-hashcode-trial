@@ -17,5 +17,8 @@ public class pizzaSlice {
 
         pizza.validateSlices();
         pizza.outputPizza("output/" + file + ".out");
+
+
     }
+
 }
